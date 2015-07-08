@@ -12,6 +12,7 @@
 #include <string>
 #include <limits>
 
+//#include "Converter.h"
 
 enum{
 	EXIT,
@@ -33,7 +34,7 @@ namespace Utilities {
 			virtual void execute();
 
 		private:
-			void displayMenu();
+			Utilities* displayMenu();
 	};
 
 } /* namespace Utilities */

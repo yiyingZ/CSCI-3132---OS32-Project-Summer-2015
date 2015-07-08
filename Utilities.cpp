@@ -6,7 +6,7 @@
  */
 
 #include "Utilities.h"
-
+#include "Converter.h"
 
 using namespace std;
 
@@ -32,10 +32,11 @@ namespace Utilities {
 	 * 		Utility* util = new Converter();
 	 *
 	 */
-	void Utilities::displayMenu(){
+	Utilities* Utilities::displayMenu(){
 
 		int runUtil = -1;
 
+		Utilities* util = NULL;
 
 		while(runUtil != 0){
 			cout << "::Utilities Menu::" << endl;
@@ -64,6 +65,9 @@ namespace Utilities {
 					case CONVERTER_UTILITY:
 
 						cout << "converter" << endl;
+
+						util = new Converter();
+
 						break;
 					case ENCRYPTION_UTILITY:
 
@@ -96,7 +100,7 @@ namespace Utilities {
 						break;
 				}
 
-
+				return util;
 			}
 		}
 
@@ -107,8 +111,12 @@ namespace Utilities {
 	 * Virtual function execute that will be overridden by other objects and will return which ever instantiated object to UI or Kernel (which ever needs it)
 	 *
 	 */
-	void Utilities::execute(){
-		displayMenu();
+	 void Utilities::execute(){
+		 Utilities* util = displayMenu();
+		 util->execute();
+
+
+		 //TODO need access to the memory management system in order to pass the pointer to the created utility object
 	}
 
 
