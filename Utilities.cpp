@@ -15,7 +15,7 @@
  *
  *	The user may then select which Utility to run, which will be then be returned as a Utilities* of selected Utility type. (eg converter, calculator etc..)
  *
- *	This Utilities* will then be passed to the kernel for scheduling and execution, then returning to the Utilities menu.
+ *	This Utilities* will then be passed to the kernel for scheduling and execution, then returning to the UI.
  */
 
 #include "Utilities.h"
