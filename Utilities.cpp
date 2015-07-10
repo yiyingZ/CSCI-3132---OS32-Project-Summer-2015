@@ -3,6 +3,19 @@
  *
  *  Created on: 7 Jul 2015
  *      Author: jturner
+ *
+ *
+ *  The Utilities class design has changed from what was initially discussed after review of the project specifications
+ *
+ *	The Utilities class should be instantiated first with a reference to the UI and Process management and execute() run
+ *	to display the menu.
+ *
+ *	Note: No memory needs to be used with the base Utility execute() task as it will be using the referenced
+ *	UI to display a menu and take user input for selection and no process is scheduled.
+ *
+ *	The user may then select which Utility to run, which will be then be returned as a Utilities* of selected Utility type. (eg converter, calculator etc..)
+ *
+ *	This pointer to the created Utilities* will then be passed to the kernel for scheduling and executing returning to the Utilities menu.
  */
 
 #include "Utilities.h"
