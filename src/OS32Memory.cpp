@@ -264,12 +264,14 @@ void OS32Memory::_free(void* mem) {
 
     DEBUG_PRINT("free(%p) :: allocated size = %zu\n", block, block->size);
 
-    // merge adjacent unallocated blocks
-    while (block->next != nullptr && !block->next->allocated) {
-        this->mergeBlockWithNext(block);
-    }
-
     block->allocated = false;
+
+    // merge adjacent unallocated blocks
+    Block *mergeBlock = block;
+    while (mergeBlock != nullptr && !mergeBlock->allocated && mergeBlock->next != nullptr && !mergeBlock->next->allocated) {
+        this->mergeBlockWithNext(mergeBlock);
+        mergeBlock = block->next;
+    }
 
     this->debugPrint();
 }
