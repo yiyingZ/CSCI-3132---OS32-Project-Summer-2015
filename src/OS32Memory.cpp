@@ -40,7 +40,7 @@ OS32Memory::~OS32Memory() {
 
     do {
         if (block->allocated) {
-            DEBUG_PRINT("Leaky kernel block @ %p! %ld bytes were not freed back to the memory managed!\n", block, block->size);
+            DEBUG_PRINT("Leaky kernel block @ %p! %ld bytes were not freed back to the memory manager!\n", block, block->size);
         }
 
         block = block->next;
@@ -51,7 +51,7 @@ OS32Memory::~OS32Memory() {
 
     do {
         if (block->allocated) {
-            DEBUG_PRINT("Leaky user block @ %p! %ld bytes were not freed back to the memory managed!\n", block, block->size);
+            DEBUG_PRINT("Leaky user block @ %p! %ld bytes were not freed back to the memory manager!\n", block, block->size);
         }
 
         block = block->next;
@@ -63,7 +63,6 @@ OS32Memory::~OS32Memory() {
     this->baseKernelBlock = nullptr;
     this->baseUserBlock = nullptr;
 }
-
 
 void OS32Memory::initialize(size_t kernelSize, size_t userSize) {
     if (this->baseKernelBlock != nullptr) {
