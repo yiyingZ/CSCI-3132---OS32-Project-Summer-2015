@@ -51,6 +51,26 @@ struct MemoryUsage {
 
 };
 
+/**
+ * The OS32 memory manager. It manages memory allocations for both kernel and user memory.
+ *
+ * Note that the allocator is dynamic. Blocks of memory given out by the allocator have
+ * some overhead which means that if the allocator is initialized with e.g. 1024 bytes
+ * of memory, that full 1024 bytes of memory cannot be then allocated to something because
+ * there will be overhead on that.
+ *
+ * As well, depending on how memory is allocated, there may be small regions of memory that
+ * cannot be used for larger allocations. Consider the following hypothetical memory layout:
+ *
+ * |Used 1MB| |Free 1MB| |Used 5MB| |Free 2MB|
+ *
+ * If a caller wanted to receive a 1.5MB block of memory with the above current memory layout,
+ * it would not be possible to give the request because there is nowhere to put it, even though
+ * there is 3MB of free memory. Already allocated (used) blocks of memory cannot be moved.
+ *
+ * However, if one of the two used blocks were freed, the 1.5MB allocation would be immediately
+ * possible because adjacent blocks could be merged into one larger block.
+ */
 class OS32Memory {
 
 public:
