@@ -97,6 +97,7 @@ void OS32Memory::initialize(size_t kernelSize, size_t userSize) {
     this->baseUserBlock->allocated = false;
 
     DEBUG_PRINT("Initialized memory with %zu kernel bytes, %zu user bytes\n", kernelSize, userSize);
+    this->debugPrint();
 }
 
 size_t OS32Memory::maxMemory() {
@@ -186,13 +187,13 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
     }
 
     // search for a block that is large enough for the header + block of memory
-    size_t block_size = HEADER_SIZE + size;
-    size_t real_aligned = wordAlign(size);
-    size_t aligned = wordAlign(block_size);
+    size_t blockSize = HEADER_SIZE + size;
+    size_t realAligned = wordAlign(size);
+    size_t aligned = wordAlign(blockSize);
 
     DEBUG_PRINT("allocate(%zu) :: aligned size = %zu\n", size, aligned);
 
-    Block *best = this->findBlock(baseBlock, real_aligned, aligned);
+    Block *best = this->findBlock(baseBlock, realAligned, aligned);
 
     // no available block; attempt a sweep_merge to free one
     if (best == NULL) {
@@ -200,7 +201,7 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
         this->performSweepMerge(baseBlock);
     }
 
-    best = this->findBlock(baseBlock, real_aligned, aligned);
+    best = this->findBlock(baseBlock, realAligned, aligned);
 
     // still no good block; no good
     if (best == nullptr) {
@@ -212,22 +213,22 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
 
     // if the returned block exactly fits our request, then there's no need
     // to make a new block ... otherwise, it needs to be split
-    if (real_aligned < best->size) {
+    if (realAligned < best->size) {
         // create a new unallocated block after the found block
-        size_t offset = block_size;
+        size_t offset = blockSize;
 
-        Block *new_block = (best + offset);
+        Block *newBlock = (best + offset);
 
         // new block init
-        new_block->size = best->size - block_size;
-        new_block->next = best->next; // best->x => best->new_block->x
-        new_block->allocated = 0;
+        newBlock->size = best->size - blockSize;
+        newBlock->next = best->next; // best->x => best->new_block->x
+        newBlock->allocated = 0;
 
-        DEBUG_PRINT("\t-> Creating unallocated block @ %p+%zu = %p with size %zu\n", best, offset, new_block, new_block->size);
+        DEBUG_PRINT("\t-> Creating unallocated block @ %p+%zu = %p with size %zu\n", best, offset, newBlock, newBlock->size);
 
         // allocated block fixup
         best->size = size;
-        best->next = new_block;
+        best->next = newBlock;
     }
 
     best->allocated = 1;
