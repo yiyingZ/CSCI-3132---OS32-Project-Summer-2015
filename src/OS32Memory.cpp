@@ -29,13 +29,13 @@ inline size_t wordAlign(size_t addr) {
 OS32Memory::~OS32Memory() {
     DEBUG_PRINT("Freeing memory\n");
 
-    // Report leaked blocks in debug mode
+    // Leaky block detector
     #if DEBUG
     this->performSweepMerge(baseKernelBlock);
     this->performSweepMerge(baseUserBlock);
     this->debugPrint();
 
-    // report any leaked blocks
+    // report any leaked kernel blocks
     Block* block = this->baseKernelBlock;
 
     do {
@@ -46,6 +46,7 @@ OS32Memory::~OS32Memory() {
         block = block->next;
     } while (block != nullptr);
 
+    // report any leaked user blocks
     block = this->baseUserBlock;
 
     do {
@@ -122,10 +123,9 @@ size_t OS32Memory::availUserMemory() {
 MemoryUsage OS32Memory::getKernelMemoryUsage() {
     MemoryUsage usage { 0 };
 
-    // Kernel memory
     Block* block = this->baseKernelBlock;
 
-    while (block != NULL) {
+    while (block != nullptr) {
         usage.overhead += MEMORY_HEADER_SIZE;
         usage.maxMemory += block->size + MEMORY_HEADER_SIZE;
 
@@ -144,10 +144,9 @@ MemoryUsage OS32Memory::getKernelMemoryUsage() {
 MemoryUsage OS32Memory::getUserMemoryUsage() {
     MemoryUsage usage { 0 };
 
-    // Kernel memory
     Block* block = this->baseUserBlock; // TODO
 
-    while (block != NULL) {
+    while (block != nullptr) {
         usage.overhead += MEMORY_HEADER_SIZE;
         usage.maxMemory += block->size + MEMORY_HEADER_SIZE;
 
@@ -295,7 +294,7 @@ void OS32Memory::performSweepMerge(Block *baseBlock) {
     Block *block = baseBlock;
 
     while (block != nullptr) {
-        if (!block->allocated && block->next != NULL && !block->next->allocated) {
+        if (!block->allocated && block->next != nullptr && !block->next->allocated) {
             this->mergeBlockWithNext(block);
         } else {
             // only advance the block when there are no more unallocated blocks found
@@ -326,7 +325,7 @@ void OS32Memory::debugPrint() {
     printf("Blocks [Kernel]\n");
     Block* block = baseKernelBlock;
 
-    while (block != NULL) {
+    while (block != nullptr) {
         printf("[Kernel block %d]\n", blockNumber);
         printf("\tpos: %p\n", block);
         printf("\tallocated: %s\n", block->allocated == 1 ? "yes" : "no");
@@ -341,7 +340,7 @@ void OS32Memory::debugPrint() {
     block = baseUserBlock;
     blockNumber = 1;
 
-    while (block != NULL) {
+    while (block != nullptr) {
         printf("[User block %d]\n", blockNumber);
         printf("\tpos: %p\n", block);
         printf("\tallocated: %s\n", block->allocated == 1 ? "yes" : "no");
