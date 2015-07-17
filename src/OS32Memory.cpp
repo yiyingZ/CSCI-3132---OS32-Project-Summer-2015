@@ -196,7 +196,7 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
     Block *best = this->findBlock(baseBlock, realAligned, aligned);
 
     // no available block; attempt a sweep_merge to free one
-    if (best == NULL) {
+    if (best == nullptr) {
         DEBUG_PRINT("\t-> no best block; performing a sweep_merge!\n");
         this->performSweepMerge(baseBlock);
     }
@@ -217,12 +217,12 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
         // create a new unallocated block after the found block
         size_t offset = blockSize;
 
-        Block *newBlock = (best + offset);
+        Block *newBlock = (Block*) ((char*)best + offset);
 
         // new block init
         newBlock->size = best->size - blockSize;
         newBlock->next = best->next; // best->x => best->new_block->x
-        newBlock->allocated = 0;
+        newBlock->allocated = false;
 
         DEBUG_PRINT("\t-> Creating unallocated block @ %p+%zu = %p with size %zu\n", best, offset, newBlock, newBlock->size);
 
@@ -231,7 +231,7 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
         best->next = newBlock;
     }
 
-    best->allocated = 1;
+    best->allocated = true;
 
     // zero out the allocated memory so that no information
     // leaks between memory requests
