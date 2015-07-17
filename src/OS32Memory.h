@@ -22,6 +22,33 @@ struct Block {
 
 };
 
+/**
+ * Struct to store memory usage
+ */
+struct MemoryUsage {
+
+    /**
+     * The overhead byte count for kernel memory
+     */
+    size_t overhead;
+
+    /**
+     * Max kernel memory
+     */
+    size_t maxMemory;
+
+    /**
+     * Used kernel memory
+     */
+    size_t usedMemory;
+
+    /**
+     * Available kernel memory
+     */
+    size_t availableMemory;
+
+};
+
 class OS32Memory {
 
 public:
@@ -87,6 +114,16 @@ public:
      * Returns the amount of available user memory in bytes.
      */
     size_t availUserMemory();
+
+    /**
+     * Returns the memory usage of the kernel memory manager
+     */
+    MemoryUsage getKernelMemoryUsage();
+
+    /**
+     * Returns the memory usage of the user memory manager
+     */
+    MemoryUsage getUserMemoryUsage();
 
 private:
 

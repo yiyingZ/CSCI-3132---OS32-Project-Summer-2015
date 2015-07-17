@@ -73,28 +73,67 @@ void OS32Memory::initialize(size_t size) {
 }
 
 size_t OS32Memory::maxMemory() {
-    DEBUG_PRINT("maxMemory is not implemented!\n");
-    return 0;
+    return getKernelMemoryUsage().maxMemory;
 }
 
 size_t OS32Memory::usedMemory() {
-    DEBUG_PRINT("usedMemory is not implemented!\n");
-    return 0;
+    return getKernelMemoryUsage().usedMemory;
 }
 
 size_t OS32Memory::availMemory() {
-    DEBUG_PRINT("availMemory is not implemented!\n");
-    return 0;
+    return getKernelMemoryUsage().availableMemory;
 }
 
 size_t OS32Memory::totalUserMemory() {
-    DEBUG_PRINT("totalUserMemory is not implemented!\n");
-    return 0;
+    return getUserMemoryUsage().maxMemory;
 }
 
 size_t OS32Memory::availUserMemory() {
-    DEBUG_PRINT("availUserMemory is not implemented!\n");
-    return 0;
+    return getUserMemoryUsage().availableMemory;
+}
+
+MemoryUsage OS32Memory::getKernelMemoryUsage() {
+    MemoryUsage usage { 0 };
+
+    // Kernel memory
+    Block* block = this->baseBlock;
+
+    while (block != NULL) {
+        usage.overhead += HEADER_SIZE;
+        usage.maxMemory += block->size + HEADER_SIZE;
+
+        if (block->allocated) {
+            usage.usedMemory += block->size;
+        } else {
+            usage.availableMemory += block->size;
+        }
+
+        block = block->next;
+    }
+
+    return usage;
+}
+
+MemoryUsage OS32Memory::getUserMemoryUsage() {
+    MemoryUsage usage { 0 };
+
+    // Kernel memory
+    Block* block = this->baseBlock; // TODO
+
+    while (block != NULL) {
+        usage.overhead += HEADER_SIZE;
+        usage.maxMemory += block->size + HEADER_SIZE;
+
+        if (block->allocated) {
+            usage.usedMemory += block->size;
+        } else {
+            usage.availableMemory += block->size;
+        }
+
+        block = block->next;
+    }
+
+    return usage;
 }
 
 void* OS32Memory::allocate(size_t size) {
@@ -262,10 +301,20 @@ void OS32Memory::debugPrint() {
         blockNumber ++;
     }
 
-    printf("Memory Usage\n");
-    printf("\tBytes allocated: %d\n", allocated);
-    printf("\tBytes free: %d\n", free);
-    printf("\tBytes overhead: %d\n", overhead);
+    MemoryUsage usage = getKernelMemoryUsage();
+    printf("Memory Usage [Kernel]\n");
+    printf("\tManager size: %zu\n", usage.maxMemory);
+    printf("\tBytes allocated: %zu\n", usage.usedMemory);
+    printf("\tBytes free: %zu\n", usage.availableMemory);
+    printf("\tBytes overhead: %zu\n", usage.overhead);
+
+
+    usage = getUserMemoryUsage();
+    printf("Memory Usage [User]\n");
+    printf("\tManager size: %zu\n", usage.maxMemory);
+    printf("\tBytes allocated: %zu\n", usage.usedMemory);
+    printf("\tBytes free: %zu\n", usage.availableMemory);
+    printf("\tBytes overhead: %zu\n", usage.overhead);
 
     #endif
 }
