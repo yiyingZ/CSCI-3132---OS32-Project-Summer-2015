@@ -25,6 +25,11 @@ struct Block {
 class OS32Memory {
 
 public:
+    static OS32Memory& getInstance()
+    {
+        static OS32Memory instance;
+        return instance;
+    }
 
     /**
      * Creates a new memory instance that will allocate up to size bytes.
@@ -37,10 +42,11 @@ public:
     ~OS32Memory();
 
     /**
-     * Updates the memory config
-     * TODO ??
+     * Initializes the memory manager that allocates the given size number of bytes.
+     *
+     * If the memory manager is currently initialized, it will be reinitialized.
      */
-    void updateMemConfig();
+    void initialize(size_t size);
 
     /**
      * Attempts to allocate a block of memory of the given size and returns the block.
@@ -84,10 +90,18 @@ public:
 
 private:
 
+    OS32Memory() { }
+
+    /**
+     * Memory is a singleton so these should be prevented
+     */
+    OS32Memory(OS32Memory const&) = delete;
+    void operator=(OS32Memory const&) = delete;
+
     /**
      * The base block of memory; i.e. the root.
      */
-    Block* baseBlock;
+    Block* baseBlock = nullptr;
 
     /**
      * Debugging tool -- print all usage

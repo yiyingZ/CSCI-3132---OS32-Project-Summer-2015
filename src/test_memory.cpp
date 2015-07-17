@@ -32,14 +32,15 @@ int fibo_compute(int n) {
 }
 
 void test_fibo() {
-    std::unique_ptr<OS32Memory> memory(new OS32Memory(FIBO_MEM_SIZE));
+    OS32Memory& memory = OS32Memory::getInstance();
+    memory.initialize(FIBO_MEM_SIZE);
 
     int *fibo_table[FIBO_TABLE_SIZE];
 
     for (int i = 0; i < FIBO_TABLE_SIZE; i++) {
-        fibo_table[i] = (int*) memory->allocate(sizeof(int));
+        fibo_table[i] = (int*) memory.allocate(sizeof(int));
 
-        assert(memory->getSize(fibo_table[i]) == sizeof(int));
+        assert(memory.getSize(fibo_table[i]) == sizeof(int));
 
         *fibo_table[i] = fibo_compute(i);
     }
@@ -49,6 +50,6 @@ void test_fibo() {
     }
 
     for (int i = 0; i < FIBO_TABLE_SIZE; i++) {
-        memory->free(fibo_table[i]);
+        memory.free(fibo_table[i]);
     }
 }

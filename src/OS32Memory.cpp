@@ -27,21 +27,6 @@ inline size_t wordAlign(size_t addr) {
     }
 }
 
-OS32Memory::OS32Memory(size_t size) {
-    void* block = std::malloc(size);
-
-    if (block == NULL) {
-        throw "Failed to initialize memory manager: malloc = NULL";
-    }
-
-    this->baseBlock = (Block*) block;
-    this->baseBlock->size = size - HEADER_SIZE;
-    this->baseBlock->next = nullptr;
-    this->baseBlock->allocated = false;
-
-    DEBUG_PRINT("Initialized memory with %ld bytes\n", size);
-}
-
 OS32Memory::~OS32Memory() {
     DEBUG_PRINT("Freeing memory\n");
 
@@ -64,6 +49,27 @@ OS32Memory::~OS32Memory() {
 
     std::free(this->baseBlock);
     this->baseBlock = nullptr;
+}
+
+
+void OS32Memory::initialize(size_t size) {
+    if (this->baseBlock != nullptr) {
+        free(this->baseBlock);
+        this->baseBlock = nullptr;
+    }
+
+    void* block = std::malloc(size);
+
+    if (block == nullptr) {
+        throw "Failed to initialize memory manager: malloc = NULL";
+    }
+
+    this->baseBlock = (Block*) block;
+    this->baseBlock->size = size - HEADER_SIZE;
+    this->baseBlock->next = nullptr;
+    this->baseBlock->allocated = false;
+
+    DEBUG_PRINT("Initialized memory with %ld bytes\n", size);
 }
 
 size_t OS32Memory::maxMemory() {
