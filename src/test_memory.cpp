@@ -33,12 +33,12 @@ int fibo_compute(int n) {
 
 void test_fibo() {
     OS32Memory& memory = OS32Memory::getInstance();
-    memory.initialize(FIBO_MEM_SIZE);
+    memory.initialize(FIBO_MEM_SIZE, FIBO_MEM_SIZE);
 
     int *fibo_table[FIBO_TABLE_SIZE];
 
     for (int i = 0; i < FIBO_TABLE_SIZE; i++) {
-        fibo_table[i] = (int*) memory.allocate(sizeof(int));
+        fibo_table[i] = (int*) memory.alloc(sizeof(int));
 
         assert(memory.getSize(fibo_table[i]) == sizeof(int));
 

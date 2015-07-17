@@ -32,44 +32,71 @@ OS32Memory::~OS32Memory() {
 
     // Report leaked blocks in debug mode
     #if DEBUG
-    this->performSweepMerge();
+    this->performSweepMerge(baseKernelBlock);
+    this->performSweepMerge(baseUserBlock);
     this->debugPrint();
 
     // report any leaked blocks
-    Block* block = this->baseBlock;
+    Block* block = this->baseKernelBlock;
 
     do {
         if (block->allocated) {
-            DEBUG_PRINT("Leaky block @ %p! %ld bytes were not freed back to the memory managed!\n", block, block->size);
+            DEBUG_PRINT("Leaky kernel block @ %p! %ld bytes were not freed back to the memory managed!\n", block, block->size);
+        }
+
+        block = block->next;
+    } while (block != nullptr);
+
+    block = this->baseKernelBlock;
+
+    do {
+        if (block->allocated) {
+            DEBUG_PRINT("Leaky user block @ %p! %ld bytes were not freed back to the memory managed!\n", block, block->size);
         }
 
         block = block->next;
     } while (block != nullptr);
     #endif
 
-    std::free(this->baseBlock);
-    this->baseBlock = nullptr;
+    std::free(this->baseKernelBlock);
+    std::free(this->baseUserBlock);
+    this->baseKernelBlock = nullptr;
+    this->baseUserBlock = nullptr;
 }
 
 
-void OS32Memory::initialize(size_t size) {
-    if (this->baseBlock != nullptr) {
-        free(this->baseBlock);
-        this->baseBlock = nullptr;
+void OS32Memory::initialize(size_t kernelSize, size_t userSize) {
+    if (this->baseKernelBlock != nullptr) {
+        std::free(this->baseKernelBlock);
+        std::free(this->baseUserBlock);
+        this->baseKernelBlock = nullptr;
+        this->baseUserBlock = nullptr;
     }
 
-    void* block = std::malloc(size);
+    void* kernelBlock = std::malloc(kernelSize);
 
-    if (block == nullptr) {
+    if (kernelBlock == nullptr) {
         throw "Failed to initialize memory manager: malloc = NULL";
     }
 
-    this->baseBlock = (Block*) block;
-    this->baseBlock->size = size - HEADER_SIZE;
-    this->baseBlock->next = nullptr;
-    this->baseBlock->allocated = false;
+    void* userBlock = std::malloc(userSize);
 
-    DEBUG_PRINT("Initialized memory with %ld bytes\n", size);
+    if (userBlock == nullptr) {
+        std::free(kernelBlock);
+        throw "Failed to initialize memory manager: malloc = NULL";
+    }
+
+    this->baseKernelBlock = (Block*) kernelBlock;
+    this->baseKernelBlock->size = kernelSize - HEADER_SIZE;
+    this->baseKernelBlock->next = nullptr;
+    this->baseKernelBlock->allocated = false;
+
+    this->baseUserBlock = (Block*) userBlock;
+    this->baseUserBlock->size = userSize - HEADER_SIZE;
+    this->baseUserBlock->next = nullptr;
+    this->baseUserBlock->allocated = false;
+
+    DEBUG_PRINT("Initialized memory with %zu kernel bytes, %zu user bytes\n", kernelSize, userSize);
 }
 
 size_t OS32Memory::maxMemory() {
@@ -96,7 +123,7 @@ MemoryUsage OS32Memory::getKernelMemoryUsage() {
     MemoryUsage usage { 0 };
 
     // Kernel memory
-    Block* block = this->baseBlock;
+    Block* block = this->baseKernelBlock;
 
     while (block != NULL) {
         usage.overhead += HEADER_SIZE;
@@ -118,7 +145,7 @@ MemoryUsage OS32Memory::getUserMemoryUsage() {
     MemoryUsage usage { 0 };
 
     // Kernel memory
-    Block* block = this->baseBlock; // TODO
+    Block* block = this->baseUserBlock; // TODO
 
     while (block != NULL) {
         usage.overhead += HEADER_SIZE;
@@ -136,8 +163,25 @@ MemoryUsage OS32Memory::getUserMemoryUsage() {
     return usage;
 }
 
-void* OS32Memory::allocate(size_t size) {
-    if (size <= 0) {
+
+void *OS32Memory::kalloc(size_t size) {
+    return _alloc(baseKernelBlock, size);
+}
+
+void OS32Memory::kfree(void *mem) {
+    _free(mem);
+}
+
+void *OS32Memory::alloc(size_t size) {
+    return _alloc(baseUserBlock, size);
+}
+
+void OS32Memory::free(void *mem) {
+    _free(mem);
+}
+
+void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
+    if (baseBlock == nullptr || size <= 0) {
         return nullptr;
     }
 
@@ -148,15 +192,15 @@ void* OS32Memory::allocate(size_t size) {
 
     DEBUG_PRINT("allocate(%zu) :: aligned size = %zu\n", size, aligned);
 
-    Block *best = this->findBlock(real_aligned, aligned);
+    Block *best = this->findBlock(baseBlock, real_aligned, aligned);
 
     // no available block; attempt a sweep_merge to free one
     if (best == NULL) {
         DEBUG_PRINT("\t-> no best block; performing a sweep_merge!\n");
-        this->performSweepMerge();
+        this->performSweepMerge(baseBlock);
     }
 
-    best = this->findBlock(real_aligned, aligned);
+    best = this->findBlock(baseBlock, real_aligned, aligned);
 
     // still no good block; no good
     if (best == nullptr) {
@@ -200,7 +244,7 @@ void* OS32Memory::allocate(size_t size) {
     return allocatedBlock;
 }
 
-void OS32Memory::free(void* mem) {
+void OS32Memory::_free(void* mem) {
     if (mem == nullptr) {
         return;
     }
@@ -213,11 +257,11 @@ void OS32Memory::free(void* mem) {
     }
 
     if (block->allocated == 0) {
-        DEBUG_PRINT("Invalid release_memory request for %p (blk %p)! Memory block header does not exist.\n", mem, block);
+        DEBUG_PRINT("Invalid free request for %p (blk %p)! Memory block header does not exist.\n", mem, block);
         return;
     }
 
-    DEBUG_PRINT("release_memory(%p) :: allocated size = %zu\n", block, block->size);
+    DEBUG_PRINT("free(%p) :: allocated size = %zu\n", block, block->size);
 
     // merge adjacent unallocated blocks
     while (block->next != nullptr && !block->next->allocated) {
@@ -243,10 +287,10 @@ size_t OS32Memory::getSize(void *mem) {
     return block->size;
 }
 
-void OS32Memory::performSweepMerge() {
+void OS32Memory::performSweepMerge(Block *baseBlock) {
     DEBUG_PRINT("Performing a sweep merge\n");
 
-    Block *block = this->baseBlock;
+    Block *block = baseBlock;
 
     while (block != nullptr) {
         if (!block->allocated && block->next != NULL && !block->next->allocated) {
@@ -275,23 +319,28 @@ void OS32Memory::mergeBlockWithNext(Block *block) {
 void OS32Memory::debugPrint() {
     #if DEBUG
 
-    int allocated = 0;
-    int free = 0;
-    int overhead = 0;
     int blockNumber = 1;
 
-    Block* block = this->baseBlock;
+    printf("Blocks [Kernel]\n");
+    Block* block = baseKernelBlock;
 
     while (block != NULL) {
-        overhead += HEADER_SIZE;
+        printf("[Kernel block %d]\n", blockNumber);
+        printf("\tpos: %p\n", block);
+        printf("\tallocated: %s\n", block->allocated == 1 ? "yes" : "no");
+        printf("\tsize: %zu\n", block->size);
+        printf("\tnext: %p\n", block->next);
 
-        if (block->allocated == 1) {
-            allocated += block->size;
-        } else if (block->allocated == 0) {
-            free += block->size;
-        }
+        block = block->next;
+        blockNumber ++;
+    }
 
-        printf("[block %d]\n", blockNumber);
+    printf("Blocks [User]\n");
+    block = baseKernelBlock;
+    blockNumber = 1;
+
+    while (block != NULL) {
+        printf("[User block %d]\n", blockNumber);
         printf("\tpos: %p\n", block);
         printf("\tallocated: %s\n", block->allocated == 1 ? "yes" : "no");
         printf("\tsize: %zu\n", block->size);
@@ -308,7 +357,6 @@ void OS32Memory::debugPrint() {
     printf("\tBytes free: %zu\n", usage.availableMemory);
     printf("\tBytes overhead: %zu\n", usage.overhead);
 
-
     usage = getUserMemoryUsage();
     printf("Memory Usage [User]\n");
     printf("\tManager size: %zu\n", usage.maxMemory);
@@ -319,8 +367,8 @@ void OS32Memory::debugPrint() {
     #endif
 }
 
-Block* OS32Memory::findBlock(size_t realSize, size_t size) {
-    Block* block = this->baseBlock;
+Block* OS32Memory::findBlock(Block* baseBlock, size_t realSize, size_t size) {
+    Block* block = baseBlock;
     Block* best = nullptr;
 
     do {

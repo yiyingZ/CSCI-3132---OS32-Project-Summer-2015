@@ -72,16 +72,29 @@ public:
      * Initializes the memory manager that allocates the given size number of bytes.
      *
      * If the memory manager is currently initialized, it will be reinitialized.
+     *
+     * @param kernelSize the bytes to allocate to kernel allocations
+     * @param userSize the bytes to allocate to user allocation
      */
-    void initialize(size_t size);
+    void initialize(size_t kernelSize, size_t userSize);
 
     /**
-     * Attempts to allocate a block of memory of the given size and returns the block.
+     * Attempts to allocate a block of memory of the given size in kernel memory space.
      */
-    void* allocate(size_t size);
+    void* kalloc(size_t size);
 
     /**
-     * Frees the given block of memory.
+     * Frees the given block of kernel memory.
+     */
+    void kfree(void* mem);
+
+    /**
+     * Attempts to allocate a block of memory of the given size in user memory space.
+     */
+    void* alloc(size_t size);
+
+    /**
+     * Frees the given block of user memory.
      */
     void free(void* mem);
 
@@ -136,14 +149,29 @@ private:
     void operator=(OS32Memory const&) = delete;
 
     /**
-     * The base block of memory; i.e. the root.
+     * The base block of kernel memory
      */
-    Block* baseBlock = nullptr;
+    Block* baseKernelBlock = nullptr;
+
+    /**
+     * The base block of user memory
+     */
+    Block* baseUserBlock = nullptr;
 
     /**
      * Debugging tool -- print all usage
      */
     void debugPrint();
+
+    /**
+     * Internal implementation of alloc
+     */
+    void* _alloc(Block* baseBlock, size_t size);
+
+    /**
+     * Internal implementation of free
+     */
+    void _free(void* mem);
 
     /**
      * Gets the header block for a given allocated block
@@ -153,10 +181,11 @@ private:
     /**
      * Finds the best block to allocate into with the given size.
      *
+     * @param baseBlock
      * @param realSize the real size of the block that is requested.
      * @param size the full size that should be requested (incl. header)
      */
-    Block* findBlock(size_t realSize, size_t size);
+    Block* findBlock(Block* baseBlock, size_t realSize, size_t size);
 
     /**
      * Merges the given block with the block after it. Both must be unallocated.
@@ -164,13 +193,13 @@ private:
     void mergeBlockWithNext(Block *block);
 
     /**
-     * Perform a sweeping merge on any neighbouring unallocated blocks.
+     * Perform a sweeping merge on any neighbouring unallocated blocks for the given base block.
      * free() already does merging when the next block is unallocated;
      * however it does not look at the previous block.
      * This is typically only used when a memory allocation is requested and
      * there are no free blocks to place it in; performSweepMerge() will attempt to
      * create a free block in the event of multiple adjacent unallocated blocks.
      */
-    void performSweepMerge();
+    void performSweepMerge(Block* baseBlock);
 
 };
