@@ -8,6 +8,7 @@
 #include <iostream>
 
 class UI {
+public:
     static void println(const std::string &);
     static void print(const std::string &);
 };
