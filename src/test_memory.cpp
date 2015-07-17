@@ -2,10 +2,8 @@
 
 #include <assert.h>
 
-// expected size under 64 bit:
-// 32 * (4 + 24) = 896
-#define FIBO_MEM_SIZE (896)
 #define FIBO_TABLE_SIZE (32)
+#define FIBO_MEM_SIZE (FIBO_TABLE_SIZE * (4 + MEMORY_HEADER_SIZE))
 
 #define BIG_MEM_KERNEL_SIZE (1024 * 1024 * 10)
 #define BIG_MEM_USER_SIZE (1024 * 1024 * 2)
@@ -14,8 +12,6 @@
  * The purpose of this test is to test the very basics of the
  * memory allocator. It is basically just a dummy test to
  * ensure allocations will actually work.
- *
- * Note: This test assumes a 64-bit system.
  */
 void test_fibo();
 

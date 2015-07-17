@@ -22,6 +22,8 @@ struct Block {
 
 };
 
+#define MEMORY_HEADER_SIZE (sizeof(Block))
+
 /**
  * Struct to store memory usage
  */

@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #define DEBUG 1
-#define HEADER_SIZE (sizeof(Block))
 
 #if DEBUG
 #define DEBUG_PRINT(...) printf(__VA_ARGS__);
@@ -87,12 +86,12 @@ void OS32Memory::initialize(size_t kernelSize, size_t userSize) {
     }
 
     this->baseKernelBlock = (Block*) kernelBlock;
-    this->baseKernelBlock->size = kernelSize - HEADER_SIZE;
+    this->baseKernelBlock->size = kernelSize - MEMORY_HEADER_SIZE;
     this->baseKernelBlock->next = nullptr;
     this->baseKernelBlock->allocated = false;
 
     this->baseUserBlock = (Block*) userBlock;
-    this->baseUserBlock->size = userSize - HEADER_SIZE;
+    this->baseUserBlock->size = userSize - MEMORY_HEADER_SIZE;
     this->baseUserBlock->next = nullptr;
     this->baseUserBlock->allocated = false;
 
@@ -127,8 +126,8 @@ MemoryUsage OS32Memory::getKernelMemoryUsage() {
     Block* block = this->baseKernelBlock;
 
     while (block != NULL) {
-        usage.overhead += HEADER_SIZE;
-        usage.maxMemory += block->size + HEADER_SIZE;
+        usage.overhead += MEMORY_HEADER_SIZE;
+        usage.maxMemory += block->size + MEMORY_HEADER_SIZE;
 
         if (block->allocated) {
             usage.usedMemory += block->size;
@@ -149,8 +148,8 @@ MemoryUsage OS32Memory::getUserMemoryUsage() {
     Block* block = this->baseUserBlock; // TODO
 
     while (block != NULL) {
-        usage.overhead += HEADER_SIZE;
-        usage.maxMemory += block->size + HEADER_SIZE;
+        usage.overhead += MEMORY_HEADER_SIZE;
+        usage.maxMemory += block->size + MEMORY_HEADER_SIZE;
 
         if (block->allocated) {
             usage.usedMemory += block->size;
@@ -187,7 +186,7 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
     }
 
     // search for a block that is large enough for the header + block of memory
-    size_t blockSize = HEADER_SIZE + size;
+    size_t blockSize = MEMORY_HEADER_SIZE + size;
     size_t realAligned = wordAlign(size);
     size_t aligned = wordAlign(blockSize);
 
@@ -235,7 +234,7 @@ void* OS32Memory::_alloc(Block *baseBlock, size_t size) {
 
     // zero out the allocated memory so that no information
     // leaks between memory requests
-    void *allocatedBlock = (void *) (((intptr_t) best) + HEADER_SIZE);
+    void *allocatedBlock = (void *) (((intptr_t) best) + MEMORY_HEADER_SIZE);
     memset(allocatedBlock, 0, best->size);
 
     DEBUG_PRINT("\t-> Allocated requested block @ %p (blk: %p) with size %zu\n", allocatedBlock, best, best->size);
@@ -312,7 +311,7 @@ void OS32Memory::mergeBlockWithNext(Block *block) {
     assert(!block->allocated);
     assert(block->next != nullptr && !block->next->allocated);
 
-    block->size += block->next->size + HEADER_SIZE;
+    block->size += block->next->size + MEMORY_HEADER_SIZE;
 
     DEBUG_PRINT("\t-> merging with next block @ %p with size %zu; new size = %zu\n", block->next, block->next->size, block->size);
 
@@ -396,7 +395,7 @@ Block* OS32Memory::findBlock(Block* baseBlock, size_t realSize, size_t size) {
 }
 
 Block* OS32Memory::getBlockFromAddr(void* mem) {
-    Block* block = (Block*) (((intptr_t) mem) - HEADER_SIZE);
+    Block* block = (Block*) (((intptr_t) mem) - MEMORY_HEADER_SIZE);
 
     // try to naively detect some invalid cases
     if (block->size == 0) {
