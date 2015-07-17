@@ -47,7 +47,7 @@ OS32Memory::~OS32Memory() {
         block = block->next;
     } while (block != nullptr);
 
-    block = this->baseKernelBlock;
+    block = this->baseUserBlock;
 
     do {
         if (block->allocated) {
