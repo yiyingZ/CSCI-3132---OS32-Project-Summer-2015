@@ -43,11 +43,6 @@ public:
     void updateMemConfig();
 
     /**
-     * Finds the size of a file in bytes.
-     */
-    size_t findFileSize(std::string fileName);
-
-    /**
      * Attempts to allocate a block of memory of the given size and returns the block.
      */
     void* allocate(size_t size);
@@ -55,7 +50,12 @@ public:
     /**
      * Frees the given block of memory.
      */
-    void free(void* block);
+    void free(void* mem);
+
+    /**
+     * Gets the size of an allocated memory block.
+     */
+    size_t getSize(void* mem);
 
     /**
      * Returns the maximum amount of memory in bytes.
@@ -106,6 +106,11 @@ private:
      * @param size the full size that should be requested (incl. header)
      */
     Block* findBlock(size_t realSize, size_t size);
+
+    /**
+     * Merges the given block with the block after it. Both must be unallocated.
+     */
+    void mergeBlockWithNext(Block *block);
 
     /**
      * Perform a sweeping merge on any neighbouring unallocated blocks.
