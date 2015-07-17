@@ -339,7 +339,7 @@ void OS32Memory::debugPrint() {
     }
 
     printf("Blocks [User]\n");
-    block = baseKernelBlock;
+    block = baseUserBlock;
     blockNumber = 1;
 
     while (block != NULL) {
