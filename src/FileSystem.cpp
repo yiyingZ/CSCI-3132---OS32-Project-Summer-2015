@@ -11,7 +11,10 @@
  */
 FileSystem::FileSystem(std::string n) {
     fs=n;
-    //start user at rootDir
+    //initialize root directory
+    std::vector<bool> rootPerm{1,1,1};
+    std::vector<File*> dir;
+    rootDir = new File("root",dir,rootPerm);
     currDir=rootDir;
 }
 /*
