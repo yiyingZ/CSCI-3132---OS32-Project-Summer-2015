@@ -2,18 +2,21 @@
 #define ENCRYPTION_H
 
 #include <iostream>
-#include <fstream>
+#include "FileSystem.h"
+#include "Utilities.h"
 
-class Encryption
-{
-public:
-	Encryption();
-	Encryption(char* keyIn);
-	int execute(char* filename);
-private:
-	std::string* inFile(char* filename);
-	int encrypt(std::string* input, char* filename);
-	std::string key;
-};
+namespace Utilities {
 
+	class Encryption : public Utilities
+	{
+	public:
+		Encryption() {};
+		~Encryption() {}
+		void execute();
+	private:
+		File* getFile();
+		int encrypt(File* file, std::string* key);
+	};
+
+}
 #endif

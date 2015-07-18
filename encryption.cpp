@@ -1,46 +1,60 @@
 #include "encryption.h"
+
 #include <string>
+#include <sstream>
 using namespace std;
+using namespace Utilities;
 
-Encryption::Encryption() : key("Here is a default key") {}
-
-Encryption::Encryption(char* keyIn) : key(keyIn) {}
-
-int Encryption::execute(char* filename)
-{
-	std::string* oldString = inFile(filename);
-	int outString;
-	
-	outString = encrypt(oldString, filename);
-
-	delete(oldString);
-	return 0;
-}
-
-string* Encryption::inFile(char* filename)
-{
-	std::ifstream fileIn(filename);
-	std::string* oldString = new string(std::istreambuf_iterator<char>(fileIn),
-									 std::istreambuf_iterator<char>());
-	fileIn.close();
-	return oldString;
-}
-
-
-int Encryption::encrypt(string* input, char* filename)
-{
-	std::ofstream out(filename);
-	for(int i = 0; i < input->size(); i++)
+void Encryption::execute()
+{	
+	string key;
+	File* inFile = getFile();
+	if(inFile == nullptr || inFile->getFileType())
 	{
-		out << (char) (((*input)[i]) ^ key[i % key.size()]);
+		return;
 	}
-	out.close();
+	cout << "Enter a password or phrase." << endl;
+	cin >> key;
+	encrypt(inFile, &key);
+	return;
+}
+
+File* Encryption::getFile()
+{
+	string filename;
+	FileSystem& fs = FileSystem::getInstance();
+	cout << "Enter a file to Encrypt/Decrypt:" << endl;
+	cin >> filename;
+
+	File* file = new File(filename, "Some text to be put in to the file", { true, true, true }); // fs.fLocate(filename);
+	if(file == nullptr || file->getFileType())
+	{
+		cout << "No such file exists." << endl;
+	}
+	
+	return file;
+}
+
+
+int Encryption::encrypt(File* file, string* key)
+{
+	string input = file->getContents();
+	stringstream outstream;
+	for(size_t i = 0; i < input.size(); i++)
+	{
+		outstream << (char) (input[i] ^ (*key)[i % key->size()]);
+	}
+	file->setContents(outstream.str());
+
 	return 0;
 }
 
 int main()
 {
-	Encryption encryptor("All that is needed to create a very secure password here is to use something quite long that no one is expecting.  As long as this keeps going for a while there will be no repeating codes, except well, any time some characters repeate.");
-	encryptor.execute("testFile.txt");
+	FileSystem& fs = FileSystem::getInstance();
+	Encryption x;
+	// fs.fcreate("file", "some text inside here", { true, true, true });
+	x.execute();
+	// system("pause");
 	return EXIT_SUCCESS;
 }
