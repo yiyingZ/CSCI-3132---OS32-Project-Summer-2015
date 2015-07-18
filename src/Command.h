@@ -1,21 +1,62 @@
 #include <string>
-#include <vector>
 
 /*
- *	This class provides a common interface for system utilities used by the OS32 system.
+ *	This class provides a common interface for system and extenral utilities used by the OS32 system.
  */
 class Command {
-protected:
-	/*
-	 * This is protected to stop classes from directly instantiating this class
-	 * args contains the tokenized command string used to run this command
-	 * the 0th element will be the name of the command, and any other elements will be arguments to the command.
-	 */
-	Command(std::vector<std::string> args);
 public:
 	/*
 	 * This method executes the utility and should contain all execution logic
 	 * Should return EXIT_FAILURE or EXIT_SUCCESS
 	 */
 	virtual int execute() = 0;
+};
+
+class HelpMe : public Command {
+public:
+	int execute();
+};
+
+class FCreate : public Command {
+	std::string filename;
+public:
+	FCreate(std::string filename) : filename(filename) {}
+	int execute();
+};
+
+class FRead : public Command {
+public:
+	int execute();
+};
+
+class FWrite : public Command {
+public:
+	int execute();
+};
+
+class DCreate : public Command {
+	std::string filename;
+public:
+	DCreate(std::string filename) : filename(filename) {}
+	int execute();
+};
+
+class CurrDir : public Command {
+public:
+	CurrDir();
+	int execute();
+};
+
+class ListItems : public Command {
+public:
+	ListItems();
+	int execute();
+};
+
+class ChPer : public Command {
+	std::string filename;
+	std::string permissions;
+public:
+	ChPer(std::string filename, std::string permissions) : filename(filename), permissions(permissions) {}
+	int execute();
 };
