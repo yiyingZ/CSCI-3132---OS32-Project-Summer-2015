@@ -1,16 +1,17 @@
 #include <string>
+#include <vector>
 
 /*
- *	This class provides a common interface for system and external utilities used by the OS32 system.
+ *	This class provides a common interface for system utilities used by the OS32 system.
  */
 class Command {
 protected:
 	/*
 	 * This is protected to stop classes from directly instantiating this class
-	 * argc = number of arguments
-	 * argv = list of arguments
+	 * args contains the tokenized command string used to run this command
+	 * the 0th element will be the name of the command, and any other elements will be arguments to the command.
 	 */
-	Command(int argc, std::string **argv);
+	Command(std::vector<std::string> args);
 public:
 	/*
 	 * This method executes the utility and should contain all execution logic
