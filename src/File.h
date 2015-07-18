@@ -45,6 +45,8 @@ public:
 
     void setContents(const std::string &contents);
 
+    void setPermissions(std::vector<bool> p);
+
 };
 
 #endif //CSCI3132GP_FILE_H

@@ -98,7 +98,6 @@ bool File::deleteDirElement(File* f){
 std::string &File::getContents() {
     return contents;
 }
-
 /*
  * function: setContents
  * simple function that replaces file's existing contents with c
@@ -106,5 +105,10 @@ std::string &File::getContents() {
 void File::setContents(const std::string &c) {
     contents=c;
 }
-
-
+/*
+ * function: setContents
+ * simple function that replaces file's existing contents with c
+ */
+void File::setPermissions(std::vector<bool> p) {
+   permissions=p;
+}

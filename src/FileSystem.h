@@ -53,7 +53,7 @@ public:
     std::string listitems();
     //change fn permissions to p (rwx =777) if file is found (start dfs at
     //rootDir) and return 1, if file not found return 0
-    bool chper(std::string fn, int p);
+    bool chper(std::string fn,std::vector<bool> p);
 
 };
 #endif //CSCI3132GP_FILESYSTEM_H

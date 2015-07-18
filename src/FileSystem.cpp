@@ -134,7 +134,9 @@ std::string FileSystem::listitems() {
 }
 
 
-bool FileSystem::chper(std::string fn, int p) {
-    return false;
+bool FileSystem::chper(std::string fn,std::vector<bool> p) {
+    File *f = fLocate(fn);
+    f->setPermissions(p);
+
 }
 
