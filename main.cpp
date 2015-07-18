@@ -1,11 +1,25 @@
 #include <iostream>
 #include "ui/Menu.h"
+#include "ui/parser.h"
 
 using namespace std;
 
 
 int main() {
-    Menu mainMenu
+
+  parser *syntax;
+  syntax = new parser;
+
+  string cmdLine;
+
+  cout << "Enter a string: " << endl;
+
+  getline(cin, cmdLine);
+
+  syntax->parsing(cmdLine);
+  syntax->displayToken();
+
+/*    Menu mainMenu
             {"main",
                 {
                         {"User Commands", {}},
@@ -21,6 +35,6 @@ int main() {
                         {"Shutdown", {}}
                 }
             };
-    mainMenu.printOptions();
-    return 0;
+    mainMenu.printOptions();*/
+    return EXIT_SUCCESS;
 }
