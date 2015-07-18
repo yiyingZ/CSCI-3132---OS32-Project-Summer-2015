@@ -104,10 +104,11 @@ File *FileSystem::getCurrDir() {
 bool FileSystem::fdelete(std::string n) {
     File *temp = fLocate(n);
     File *parent = getCurrDir();
-    parent->deleteDirElement(temp);
-
+    if(parent->deleteDirElement(temp))
+        return 1;
+    else
+        return 0;
 }
-
 /*
  * function: renameFile
  *  must reset currDir=rootDir after dfs
@@ -133,7 +134,11 @@ std::string FileSystem::listitems() {
     return outp.str();
 }
 
-
+/*
+ * function: chper
+ * change permissions on file fn to p and return a 1
+ * if can't find file or change permissions, return 0
+ */
 bool FileSystem::chper(std::string fn,std::vector<bool> p) {
     File *f = fLocate(fn);
     f->setPermissions(p);

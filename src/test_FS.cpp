@@ -5,6 +5,6 @@ using namespace std;
 
 int main() {
     //build single instance of FileSystem for testing
-    FileSystem& memory = FileSystem::getInstance();
+    FileSystem& fs = FileSystem::getInstance();
     return 0;
 }
