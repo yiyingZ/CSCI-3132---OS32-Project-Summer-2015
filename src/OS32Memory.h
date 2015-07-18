@@ -81,11 +81,6 @@ public:
     }
 
     /**
-     * Creates a new memory instance that will allocate up to size bytes.
-     */
-    OS32Memory(size_t size);
-
-    /**
      * Deallocates all allocated memory.
      */
     ~OS32Memory();
