@@ -23,12 +23,9 @@ private:
 public:
     //constructor if file is a regular file
     File(std::string fn, std::string c, std::vector<bool> p);
-
     //constructor if file is a directory
     File(std::string fn, std::vector<File *> d,std::vector<bool> p);
-
     const std::string &getFileName();
-
     void setFileName(const std::string &fileName);
 
     bool getFileType();

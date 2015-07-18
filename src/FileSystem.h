@@ -24,7 +24,7 @@ public:
     //load fileSystem of name fsName (there should be only one)
     FileSystem(std::string fsName);
     //build File with filename fn in currdurr & rtn ptr to same
-    File* fcreate(std::string fn,std::string c,std::vector p);
+    File* fcreate(std::string fn,std::string c,std::vector<bool> p);
     //fread returns pointer to fName if it exists
     //so that display can display its contents,
     //or it can be modified

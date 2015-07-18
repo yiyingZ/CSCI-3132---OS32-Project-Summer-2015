@@ -14,7 +14,7 @@ using namespace std;
  * string is sent in as c, and populates permissions by
  */
 File::File(std::string fn,std::string c,std::vector<bool> p){
-    fileName=fn; fileType=0;dir= nullptr;contents=c;permissions=p;
+    fileName=fn; fileType=0;contents=c;permissions=p;
 }
 
 /*
