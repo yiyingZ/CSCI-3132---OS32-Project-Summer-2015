@@ -25,10 +25,6 @@ File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
     currDir.addDirElement(f);
     return f;
 }
-
-
-
-
 /*
  * function: fLocate
  * recursively search directories starting with root for file with
@@ -39,9 +35,18 @@ File *FileSystem::fLocate(std::string fn) {
     return fLocateHelper(rootDir);
 }
 
-File* fLocateHelper(File *f){
-    if(f->getFileName())
-    return f;
+File* fLocateHelper(File *f,std::string fn) {
+    if (f->getFileType() == 0) {
+        if (f->getFileName() == fn)
+            return f;
+    }
+    if(f->getFileType()==1){
+        for(int j=0;j<f->getDir().size();j++){
+            std::vector<File*> temp1 = f->getDir();
+            File * temp2 = temp1[j];
+            fLocateHelper(temp2,fn);
+        }
+    }
 }
 
 /*
