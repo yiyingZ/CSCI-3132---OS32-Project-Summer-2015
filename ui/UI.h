@@ -11,6 +11,13 @@ class UI {
 public:
     static void println(const std::string &);
     static void print(const std::string &);
+
+    template <typename T>
+    static T read() {
+        T ret;
+        std::cin >> ret;
+        return ret;
+    }
 };
 
 

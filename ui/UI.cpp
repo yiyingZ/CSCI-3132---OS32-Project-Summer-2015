@@ -17,3 +17,4 @@ void UI::println(const std::string &msg) {
 void UI::print(const std::string &msg) {
     std::cout << msg;
 }
+
