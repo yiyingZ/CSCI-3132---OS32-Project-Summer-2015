@@ -15,6 +15,8 @@ using namespace std;
  */
 File::File(std::string fn,std::string c,std::vector<bool> p){
     fileName=fn; fileType=0;contents=c;permissions=p;
+    //initialize for blah reason
+    dir=std::vector<File*>{};
 }
 
 /*
@@ -23,7 +25,7 @@ File::File(std::string fn,std::string c,std::vector<bool> p){
  * have this dir as root), sets contents null, and populates permissions by p
  */
 File::File(std::string fn,std::vector<File*> d,std::vector<bool> p){
-    fileName=fn;fileType=1;dir=d;contents= nullptr;permissions=p;
+    fileName=fn;fileType=1;dir=d;contents= "";permissions=p;
 }
 /*
  * function: getFileName

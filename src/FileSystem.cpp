@@ -4,13 +4,11 @@
 #include <string>
 #include <sstream>
 #include "FileSystem.h"
-#include "File.h"
 
 /*
  * Constructor
  */
-FileSystem::FileSystem(std::string n) {
-    fs=n;
+FileSystem::FileSystem() {
     //initialize root directory
     std::vector<bool> rootPerm{1,1,1};
     std::vector<File*> dir;
@@ -23,10 +21,10 @@ FileSystem::FileSystem(std::string n) {
  * Directory, and returns a pointer to the file
  */
 File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
-    File *f;
-    f = new File(fn,c,p);
+    File *f = new File(fn,c,p);
+
     bool temp = currDir->addDirElement(f);
-    if(temp==1)
+    if(temp==0)
         return f;
     else
         return nullptr;
@@ -85,11 +83,14 @@ File *FileSystem::fwrite(std::string fName) {
  * and if so build a new file (with fileType 1) and add it to currDir's
  * vector of File pointers
  */
-void FileSystem::dcreate(std::string dName) {
+bool FileSystem::dcreate(std::string dName) {
     std::vector<File *> blank;
     std::vector<bool> perms{1,1,1};
     File *newChild = new File(dName,blank,perms);
-    currDir->addDirElement(newChild);
+    if(currDir->addDirElement(newChild))
+        return 1;
+    else
+        return 0;
 }
 
 /*

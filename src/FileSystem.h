@@ -15,12 +15,10 @@
 
 class FileSystem {
 private:
-    FileSystem() { }
+    FileSystem();
     //FileSystem is a singleton so these should be prevented
     FileSystem(FileSystem const&) = delete;
     void operator=(FileSystem const&) = delete;
-    //fileSystem name
-    std::string fs;
     //some root directory that nests all other dirs and files
     File* rootDir;
     File* currDir;
@@ -46,7 +44,7 @@ public:
     //file
     File* fwrite(std::string fName);
     //create new dir of given dName & returns it, return error if exists
-    void dcreate(std::string dName);
+    bool dcreate(std::string dName);
     //return pointer to current directory so that display can output its name
     File* getCurrDir();
     //search for file from root using dfs, delete File with filename n if it
