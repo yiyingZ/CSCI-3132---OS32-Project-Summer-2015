@@ -5,11 +5,10 @@
 #include "FileSystem.h"
 #include 'File.h"
 
-
 /*
  * Constructor
  */
-FileSystem::FileSystem(string n) {
+FileSystem::FileSystem(std::string n) {
     fs=n;
     //start user at rootDir
     currDir=rootDir;
@@ -22,8 +21,11 @@ FileSystem::FileSystem(string n) {
 File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
     File *f;
     f = new File(fn,c,p);
-    currDir.addDirElement(f);
-    return f;
+    bool temp = currDir->addDirElement(f);
+    if(temp==1)
+        return f;
+    else
+        return nullptr;
 }
 /*
  * function: fLocate
@@ -32,10 +34,13 @@ File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
  */
 File *FileSystem::fLocate(std::string fn) {
     File *temp = rootDir;
-    return fLocateHelper(rootDir);
+    return fLocateHelper(rootDir,fn);
 }
-
-File* fLocateHelper(File *f,std::string fn) {
+/*
+ * function: fLocateHelper
+ * performs recursive DFS on file pointer sent in
+ */
+File * FileSystem::fLocateHelper(File *f, std::string fn) {
     if (f->getFileType() == 0) {
         if (f->getFileName() == fn)
             return f;
@@ -48,42 +53,46 @@ File* fLocateHelper(File *f,std::string fn) {
         }
     }
 }
-
 /*
  * function: fread
- *  needs to search directories starting at root
- *  for File with name fName, and return a pointer to that File
- *  if it exists, return a void pointer o.w.
+ *  returns pointer to the File that client wants to read
+ *  which then can have its contents read using getContents
+ *  (implemented this way as utility group wanted to just have
+ *  a pointer to play with)
  *
  */
 File *FileSystem::fread(std::string fName) {
-    currDir
-    return nullptr;
+    return fLocate(fName);
 }
-
 /*
  * function: fwrite
+ *  returns pointer to the File that client wants to write
+ *  which then can have its contents written to using setContents
+ *  (implemented this way as utility group wanted to just have
+ *  a pointer to play with)
  *
  */
 File *FileSystem::fwrite(std::string fName) {
-    return nullptr;
+    return fLocate(fName);
 }
-
 /*
  * function: dcreate
  * needs to check that File has fileType 1 before it does anything
  * and if so build a new file (with fileType 1) and add it to currDir's
  * vector of File pointers
  */
-File *FileSystem::dcreate(std::string dName) {
-    return nullptr;
+void FileSystem::dcreate(std::string dName) {
+    std::vector<File *> blank;
+    std::vector<bool> perms{1,1,1};
+    File *newChild = new File(dName,blank,perms);
+    currDir->addDirElement(newChild);
 }
 
 /*
  * function: currdir
  *
  */
-File *FileSystem::currdir() {
+File *FileSystem::getCurrDir() {
     return currDir;
 }
 
@@ -92,7 +101,15 @@ File *FileSystem::currdir() {
  * must remove pointer to file from Dir's vector of files
  */
 bool FileSystem::fdelete(std::string n) {
-    return 0;
+    File *temp = fLocate(n);
+    File *parent = getCurrDir();
+    for(it i=0;parent->getDir().size();i++){
+        std::vector<File*> temp1 = parent->getDir();
+        File * temp2 = temp1[j];
+        if(temp2->getFileName()==n)
+
+
+    }
 }
 
 /*

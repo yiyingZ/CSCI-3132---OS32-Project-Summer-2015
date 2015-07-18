@@ -22,7 +22,7 @@ File::File(std::string fn,std::string c,std::vector<bool> p){
  * takes in fileName, assigns fileType=1, sets vector of files (dir's that
  * have this dir as root), sets contents null, and populates permissions by p
  */
-File::File(std::string fn,std::vector<File*> d,std::string c,std::vector<bool> p){
+File::File(std::string fn,std::vector<File*> d,std::vector<bool> p){
     fileName=fn;fileType=1;dir=d;contents= nullptr;permissions=p;
 }
 /*
