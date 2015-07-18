@@ -15,12 +15,22 @@
 
 class FileSystem {
 private:
-  //perhaps some file system???
+    FileSystem() { }
+    //FileSystem is a singleton so these should be prevented
+    FileSystem(FileSystem const&) = delete;
+    void operator=(FileSystem const&) = delete;
+    //fileSystem name
     std::string fs;
-  //some root directory that nests all other dirs and files
+    //some root directory that nests all other dirs and files
     File* rootDir;
     File* currDir;
 public:
+    //impelements the class as a singleton pattern
+    static FileSystem & getInstance()
+    {
+        static FileSystem instance;
+        return instance;
+    }
     //load fileSystem of name fsName (there should be only one)
     FileSystem(std::string fsName);
     //build File with filename fn in currdurr & rtn ptr to same
