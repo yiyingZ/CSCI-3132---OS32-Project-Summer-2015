@@ -2,6 +2,7 @@
 // Created by Aaron Windsor on 20150715
 //
 #include <string>
+#include <sstream>
 #include "FileSystem.h"
 #include 'File.h"
 
@@ -117,12 +118,19 @@ bool FileSystem::renameFile(std::string n, std::string newN) {
 
 /*
  * function: listitems
+ * store contents of current directory as string and returns that
+ * akin to ls utility for Linux
  *
  */
 std::string FileSystem::listitems() {
 
-    File* temp = currDir->getDir();
-
+    std::vector<File*> temp = currDir->getDir();
+    std::stringstream outp;
+    for(int i=0;i<temp.size();i++){
+        outp<<temp[i]->getFileName();
+        outp<<" ";
+    }
+    return outp.str();
 }
 
 
@@ -130,6 +138,3 @@ bool FileSystem::chper(std::string fn, int p) {
     return false;
 }
 
-std::string FileSystem::getDirContents() {
-    return std::basic_string < char, char_traits<_CharT>, allocator < _CharT >> ();
-}

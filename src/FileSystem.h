@@ -54,10 +54,6 @@ public:
     //change fn permissions to p (rwx =777) if file is found (start dfs at
     //rootDir) and return 1, if file not found return 0
     bool chper(std::string fn, int p);
-    //basically implement ls utility, iterate over vector contents filenames and
-    //using sstream
-    std::string getDirContents();
-    //return fileType (reg file 0 or dir 1)
 
 };
 #endif //CSCI3132GP_FILESYSTEM_H
