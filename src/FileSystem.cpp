@@ -98,18 +98,13 @@ File *FileSystem::getCurrDir() {
 
 /*
  * function: fdelete
- * must remove pointer to file from Dir's vector of files
+ * removes pointer to file from Dir's vector of files
  */
 bool FileSystem::fdelete(std::string n) {
     File *temp = fLocate(n);
     File *parent = getCurrDir();
-    for(it i=0;parent->getDir().size();i++){
-        std::vector<File*> temp1 = parent->getDir();
-        File * temp2 = temp1[j];
-        if(temp2->getFileName()==n)
+    parent->deleteDirElement(temp);
 
-
-    }
 }
 
 /*
