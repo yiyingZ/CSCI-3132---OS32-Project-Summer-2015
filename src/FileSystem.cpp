@@ -2,6 +2,7 @@
 // Created by Aaron Windsor on 20150715
 //
 #include <sstream>
+#include <iostream>
 #include "FileSystem.h"
 
 /*
@@ -30,24 +31,35 @@ bool FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
  * name fn. If it exists return pointer to it
  */
 File *FileSystem::fLocate(std::string fn) {
-    return fLocateHelper(rootDir,fn);
+    int helper=0;
+    return fLocateHelper(rootDir,fn,helper);
 }
 /*
  * function: fLocateHelper
  * performs recursive DFS on file pointer sent in
  */
-File * FileSystem::fLocateHelper(File *f, std::string fn) {
-    if (f->getFileType() == 0) {
-        if (f->getFileName() == fn)
-            return f;
-    }
-    if(f->getFileType()==1){
-        for(int j=0;j<f->getDir().size();j++){
-            std::vector<File*> temp1 = f->getDir();
-            File * temp2 = temp1[j];
-            fLocateHelper(temp2,fn);
+File * FileSystem::fLocateHelper(File *f, std::string fn,int help) {
+    if(help==0) {
+        if (f->getFileType() == 0) {
+            if (fn == f->getFileName()) {
+                fLocateHelper(f, fn, 1);
+            }
+        }
+        if (f->getFileType() == 1) {
+            if (f->getDir().empty());
+            else {
+                for (int j = 0; j < f->getDir().size(); j++) {
+                    std::vector<File *> temp1 = f->getDir();
+                    File *temp2 = temp1[j];
+                    fLocateHelper(temp2, fn, help);
+                }
+            }
         }
     }
+    if(help==1){
+        return f;
+    }
+
 }
 /*
  * function: fread

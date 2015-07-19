@@ -28,7 +28,10 @@ public:
     std::string listitems();
     //return pointer to current directory so that display can output its name
     File* getCurrDir();
-    //blah
+    //locate file in dir hierarchy and return pointer to it, used by fread, fwrite, fdelete,
+    //renameFile, chper
+    File* fLocate(std::string fn);
+    File *fLocateHelper(File *f, std::string fn, int h);
 
 
 
@@ -50,10 +53,6 @@ public:
     //search for file from root using dfs, rename file n to newN and return
     //a 1 if successfull, 0 o.w.
     bool renameFile(std::string n,std::string newN);
-    //locate file in dir hierarchy and return pointer to it, used by fread, fwrite, fdelete,
-    //renameFile, chper
-    File* fLocate(std::string fn);
-    File *fLocateHelper(File *f, std::string fn);
     //change fn permissions to p (rwx =777) if file is found (start dfs at
     //rootDir) and return 1, if file not found return 0
     bool chper(std::string fn,std::vector<bool> p);

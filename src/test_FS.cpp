@@ -1,3 +1,6 @@
+//
+// Created by Aaron Windsor on 20150715
+//
 #include <iostream>
 #include "FileSystem.h"
 #include <assert.h>
@@ -72,14 +75,12 @@ int main() {
     cout<<"Test FileSystem Class getCurrDir: ";
     assert("root"==fs.getCurrDir()->getFileName());
     cout<<1<<endl;
-
-    //cout<<"Test FileSystem Class fLocate: ";
-    //File *copyBlah = fs.fLocate("blah");
-    //cout<<copyBlah->getFileName()<<endl;
-    //assert(copyBlah->getFileName()=="blah");
-    //cout<<1<<endl;
-
-
+    cout<<"Test FileSystem Class fLocate: ";
+    assert(fs.fLocate("blah"));
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class fread: ";
+    assert(fs.fread("blah"));
+    cout<<1<<endl;
 
 
     return 0;
