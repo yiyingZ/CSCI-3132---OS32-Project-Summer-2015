@@ -31,7 +31,7 @@ File::File(std::string fn,std::vector<File*> d,std::vector<bool> p){
  * function: getFileName
  * simple function that returns fileName of this File
  */
-const std::string &File::getFileName() {
+std::string &File::getFileName() {
     return fileName;
 }
 /*

@@ -1,5 +1,10 @@
 //
 // Created by Aaron Windsor on 20150715
+// Both Regular Files and Directories are Files (same as Linux)
+// Regular Files have fileType=0, contents, and dir null, whereas
+// Directories have fileTYpe=1, contents null, but dir can hold
+// vector of File pointers (the files or directories nested under
+// this dir)
 //
 
 #ifndef CSCI3132GP_FILE_H
@@ -25,25 +30,17 @@ public:
     File(std::string fn, std::string c, std::vector<bool> p);
     //constructor if file is a directory
     File(std::string fn, std::vector<File *> d,std::vector<bool> p);
-    const std::string &getFileName();
+    std::string &getFileName();
+
     void setFileName(const std::string &fileName);
-
     bool getFileType();
-
     void setFileType(bool fileType);
-
     std::vector<File *> getDir();
-
     bool addDirElement(File *f);
-
     bool deleteDirElement(File *f);
-
     std::string &getContents();
-
     void setContents(const std::string &contents);
-
     void setPermissions(std::vector<bool> p);
-
 };
 
 #endif //CSCI3132GP_FILE_H
