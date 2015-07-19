@@ -1,15 +1,13 @@
 #include <iostream>
 #include "FileSystem.h"
 #include <assert.h>
-#include <stdio.h>
-#include <string>
 
 
 using namespace std;
 
 int main() {
     //######################Test File Class##############################
-    //First test File class
+    //First test regular File class
     //Here is a regular file named reg with contents blah and 111 perms
     File *regFile = new File("reg","blah",std::vector<bool>{1,1,1});
     cout<<"Test getFileName: ";
@@ -18,6 +16,17 @@ int main() {
     cout<<"Test setFileName: ";
     regFile->setFileName("newReg");
     assert("newReg"==regFile->getFileName());
+    cout<<"1"<<endl;
+    cout<<"Test getFileType: ";
+    assert(0==regFile->getFileType());
+    cout<<"1"<<endl;
+    cout<<"Test setFileType: ";
+    regFile->setFileType(1);
+    assert(1==regFile->getFileType());
+    cout<<"1"<<endl;
+    regFile->setFileType(0);
+    cout<<"Test getContents: ";
+    assert("blah"==regFile->getContents());
     cout<<"1"<<endl;
 
     //Here is a dir file named myDir currently with no nested files or dirs

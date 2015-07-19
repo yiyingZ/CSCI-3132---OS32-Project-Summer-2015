@@ -3,7 +3,6 @@
 //
 #include "File.h"
 
-#include <string>
 
 using namespace std;
 
