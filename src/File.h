@@ -34,13 +34,14 @@ public:
     void setFileName(const std::string &fileName);
     bool getFileType();
     void setFileType(bool fileType);
-
     std::string &getContents();
-    std::vector<File *> getDir();
-    bool addDirElement(File *f);
-    bool deleteDirElement(File *f);
     void setContents(const std::string &contents);
+    std::vector<bool> getPermissions();
     void setPermissions(std::vector<bool> p);
+    bool addDirElement(File *f);
+
+    bool deleteDirElement(File *f);
+    std::vector<File *> getDir();
 };
 
 #endif //CSCI3132GP_FILE_H

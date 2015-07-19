@@ -1,6 +1,8 @@
 //
 // Created by Aaron Windsor on 20150715
 //
+#include <ostream>
+#include <iostream>
 #include "File.h"
 
 
@@ -62,7 +64,7 @@ void File::setFileType(bool f) {
  * if reg file = nullptr always
  */
 std::vector<File *> File::getDir() {
-    return std::vector<File *>();
+    return dir;
 }
 /*
  * function: addDirElement
@@ -106,9 +108,16 @@ std::string &File::getContents() {
 void File::setContents(const std::string &c) {
     contents=c;
 }
+
+
+std::vector<bool> File::getPermissions() {
+    return permissions;
+}
+
 /*
- * function: setContents
- * simple function that replaces file's existing contents with c
+ * function: setPermissions
+ * simple function that replaces file's existing permissions
+ * with those sent in as param p
  */
 void File::setPermissions(std::vector<bool> p) {
    permissions=p;
