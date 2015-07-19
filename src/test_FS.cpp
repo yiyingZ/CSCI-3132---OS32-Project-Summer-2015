@@ -54,10 +54,16 @@ int main() {
     cout<<"Test File Class getDir: ";
     assert(1==dirFile->getDir().size());
     cout<<"1"<<endl;
+    cout<<"Test File Class getDirElement: ";
+    File *gdeTest;
+    gdeTest = dirFile->getDirElement(regFile->getFileName());
+    assert(gdeTest==regFile);
+    cout<<"1"<<endl;
     cout<<"Test File Class deleteDirElement: ";
-    dirFile->deleteDirElement(regFile);
+    dirFile->deleteDirElement(regFile->getFileName());
     assert(0==dirFile->getDir().size());
     cout<<"1"<<endl;
+
     //Second Test FileSystem
     cout<<"####################Test FileSystem Class####################";
     cout<<endl;
@@ -87,5 +93,11 @@ int main() {
     cout<<"Test FileSystem Class dcreate: ";
     assert(1==fs.dcreate("blahDir"));
     cout<<1<<endl;
+
+
+    //cout<<"Test FileSystem Class fdelete: ";
+    //assert(1==fs.fdelete("blah"));
+    //cout<<1<<endl;
+
     return 0;
 }

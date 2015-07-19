@@ -39,8 +39,8 @@ public:
     std::vector<bool> getPermissions();
     void setPermissions(std::vector<bool> p);
     bool addDirElement(File *f);
-
-    bool deleteDirElement(File *f);
+    bool deleteDirElement(std::string fn);
+    File* getDirElement(std::string fn);
     std::vector<File *> getDir();
 };
 

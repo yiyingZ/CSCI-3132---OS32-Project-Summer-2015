@@ -31,7 +31,6 @@ public:
     //locate file in dir hierarchy and return pointer to it, used by fread, fwrite, fdelete,
     //renameFile, chper
     File* fLocate(std::string fn);
-    File *fLocateHelper(File *f, std::string fn, int h);
     //fread returns pointer to fName if it exists
     //so that display can display its contents,
     //or it can be modified

@@ -78,21 +78,37 @@ bool File::addDirElement(File* f){
 }
 /*
  * function: deleteDirElement
- * delete's element from dir that matches f
+ * delete's element from dir that matches fn (filename)
  * returns 1 if successful (found an f and killed it),
  * returns 0 o.w.
  */
-bool File::deleteDirElement(File* f){
+bool File::deleteDirElement(std::string fn){
     bool test=false;
     if (!dir.empty()){
         for(int i=0;i<dir.size();i++){
-            if(dir[i]->getFileName()==f->getFileName()){
+            if(dir[i]->getFileName()==fn){
                 test=true;
                 dir.erase(dir.begin()+i);
             }
         }
     }
     return test;
+}
+/*
+ * function: getDirElement
+ * returns element from dir that matches fn (filename)
+ * returns File if successful (found an f),
+ * returns nullptr o.w.
+ */
+File* File::getDirElement(std::string fn){
+    if (!dir.empty()){
+        for(int i=0;i<dir.size();i++){
+            if(dir[i]->getFileName()==fn){
+                return dir[i];
+            }
+        }
+    }
+    return nullptr;
 }
 /*
  * function: getContents
