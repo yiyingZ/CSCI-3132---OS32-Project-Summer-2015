@@ -81,7 +81,6 @@ bool FileSystem::dcreate(std::string dName) {
 File *FileSystem::getCurrDir() {
     return currDir;
 }
-
 /*
  * function: fdelete
  * removes pointer to file from Dir's vector of files
@@ -94,10 +93,11 @@ bool FileSystem::fdelete(std::string n) {
 }
 /*
  * function: renameFile
- *  must reset currDir=rootDir after dfs
  */
 bool FileSystem::renameFile(std::string n, std::string newN) {
-    return 0;
+    fLocate(n)->setFileName(newN);
+    return 1;
+
 }
 
 /*

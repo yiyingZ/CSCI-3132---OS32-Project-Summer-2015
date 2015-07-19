@@ -43,7 +43,6 @@ public:
     File* fwrite(std::string fName);
     //create new dir of given dName & returns it, return error if exists
     bool dcreate(std::string dName);
-
     //search for file from root using dfs, delete File with filename n if it
     //exists (return 1 if successful), return 0 o.w.
     bool fdelete(std::string n);

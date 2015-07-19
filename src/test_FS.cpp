@@ -93,11 +93,16 @@ int main() {
     cout<<"Test FileSystem Class dcreate: ";
     assert(1==fs.dcreate("blahDir"));
     cout<<1<<endl;
-
-
-    //cout<<"Test FileSystem Class fdelete: ";
-    //assert(1==fs.fdelete("blah"));
-    //cout<<1<<endl;
+    cout<<"Test FileSystem Class renameFile: ";
+    assert(1==fs.renameFile("blah","blah2"));
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class cpher: ";
+    std::vector<bool> cpherTest{0,0,0};
+    assert(1==fs.chper("blah2",cpherTest));
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class fdelete: ";
+    assert(1==fs.fdelete("blah2"));
+    cout<<1<<endl;
 
     return 0;
 }
