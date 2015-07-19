@@ -6,11 +6,6 @@
 #define CSCI3132GP_FILESYSTEM_H
 #include "File.h"
 
-
-
-//NOT SURE IF THIS IS RIGHT
-//class File;
-
 class FileSystem {
 private:
     FileSystem();
@@ -21,16 +16,22 @@ private:
     File* rootDir;
     File* currDir;
 public:
-    //impelements the class as a singleton pattern
+    //implements the class as a singleton pattern
     static FileSystem & getInstance()
     {
         static FileSystem instance;
         return instance;
     }
-    //load fileSystem of name fsName (there should be only one)
-    FileSystem(std::string fsName);
     //build File with filename fn in currdurr & rtn ptr to same
-    File* fcreate(std::string fn,std::string c,std::vector<bool> p);
+    bool fcreate(std::string fn,std::string c,std::vector<bool> p);
+    //list items in Dir -- akin to ls utility on currDir
+    std::string listitems();
+    //return pointer to current directory so that display can output its name
+    File* getCurrDir();
+
+
+
+
     //fread returns pointer to fName if it exists
     //so that display can display its contents,
     //or it can be modified
@@ -43,8 +44,6 @@ public:
     File* fwrite(std::string fName);
     //create new dir of given dName & returns it, return error if exists
     bool dcreate(std::string dName);
-    //return pointer to current directory so that display can output its name
-    File* getCurrDir();
     //search for file from root using dfs, delete File with filename n if it
     //exists (return 1 if successful), return 0 o.w.
     bool fdelete(std::string n);
@@ -55,8 +54,6 @@ public:
     //renameFile, chper
     File* fLocate(std::string fn);
     File *fLocateHelper(File *f, std::string fn);
-    //list items in Dir -- akin to ls utility on currDir
-    std::string listitems();
     //change fn permissions to p (rwx =777) if file is found (start dfs at
     //rootDir) and return 1, if file not found return 0
     bool chper(std::string fn,std::vector<bool> p);

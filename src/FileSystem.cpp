@@ -17,16 +17,12 @@ FileSystem::FileSystem() {
 /*
  * function: fcreate
  * function builds a new file with these params, add its to current
- * Directory, and returns a pointer to the file
+ * Directory, and bool of whether file was successfully added or not
+ * 0=no, 1=yes
  */
-File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
+bool FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
     File *f = new File(fn,c,p);
-
-    bool temp = currDir->addDirElement(f);
-    if(temp==0)
-        return f;
-    else
-        return nullptr;
+    return currDir->addDirElement(f);
 }
 /*
  * function: fLocate
@@ -34,7 +30,6 @@ File *FileSystem::fcreate(std::string fn, std::string c, std::vector<bool> p) {
  * name fn. If it exists return pointer to it
  */
 File *FileSystem::fLocate(std::string fn) {
-    File *temp = rootDir;
     return fLocateHelper(rootDir,fn);
 }
 /*

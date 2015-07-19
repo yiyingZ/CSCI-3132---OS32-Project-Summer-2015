@@ -6,7 +6,6 @@
 using namespace std;
 
 int main() {
-    //######################Test File Class##############################
     //First test regular File class
     //Here is a regular file named reg with contents blah and 111 perms
     cout<<"###############Test File Class: FileType = 0 (Reg)###############";
@@ -56,14 +55,32 @@ int main() {
     dirFile->deleteDirElement(regFile);
     assert(0==dirFile->getDir().size());
     cout<<"1"<<endl;
-
-
-    //build single instance of FileSystem for testing
+    //Second Test FileSystem
+    cout<<"####################Test FileSystem Class####################";
+    cout<<endl;
+    //build single instance of FileSystem for testing (FileSystem follows
+    //Singleton design pattern
     FileSystem& fs = FileSystem::getInstance();
-    //create blah file
+    cout<<"Test FileSystem Class fcreate: ";
     std::vector<bool> perms{1,0,0};
     std::string b="blah";std::string bb="blah blah";
-    fs.fcreate(b,bb,perms);
-    //fs.dcreate("blah");
+    assert(1==fs.fcreate(b,bb,perms));
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class lisitems: ";
+    assert("blah "==fs.listitems());
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class getCurrDir: ";
+    assert("root"==fs.getCurrDir()->getFileName());
+    cout<<1<<endl;
+
+    //cout<<"Test FileSystem Class fLocate: ";
+    //File *copyBlah = fs.fLocate("blah");
+    //cout<<copyBlah->getFileName()<<endl;
+    //assert(copyBlah->getFileName()=="blah");
+    //cout<<1<<endl;
+
+
+
+
     return 0;
 }
