@@ -1,0 +1,4 @@
+Hello World
+Today is going to be great
+C++ is the worst programming language ever
+C too
