@@ -81,7 +81,11 @@ int main() {
     cout<<"Test FileSystem Class fread: ";
     assert(fs.fread("blah"));
     cout<<1<<endl;
-
-
+    cout<<"Test FileSystem Class fwrite: ";
+    assert(fs.fwrite("blah"));
+    cout<<1<<endl;
+    cout<<"Test FileSystem Class dcreate: ";
+    assert(1==fs.dcreate("blahDir"));
+    cout<<1<<endl;
     return 0;
 }

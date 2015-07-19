@@ -32,9 +32,6 @@ public:
     //renameFile, chper
     File* fLocate(std::string fn);
     File *fLocateHelper(File *f, std::string fn, int h);
-
-
-
     //fread returns pointer to fName if it exists
     //so that display can display its contents,
     //or it can be modified
@@ -47,6 +44,7 @@ public:
     File* fwrite(std::string fName);
     //create new dir of given dName & returns it, return error if exists
     bool dcreate(std::string dName);
+
     //search for file from root using dfs, delete File with filename n if it
     //exists (return 1 if successful), return 0 o.w.
     bool fdelete(std::string n);
