@@ -5,6 +5,7 @@
 #ifndef UI_MENU_H
 #define UI_MENU_H
 
+#include <iostream>
 #include <map>
 #include <vector>
 

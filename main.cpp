@@ -7,19 +7,8 @@ using namespace std;
 
 int main() {
 
-  parser *syntax;
-  syntax = new parser;
 
-  string cmdLine;
-
-  cout << "Enter a string: " << endl;
-
-  getline(cin, cmdLine);
-
-  syntax->parsing(cmdLine);
-  syntax->displayToken();
-
-/*    Menu mainMenu
+    Menu mainMenu
             {"main",
                 {
                         {"User Commands", {}},
@@ -35,6 +24,18 @@ int main() {
                         {"Shutdown", {}}
                 }
             };
-    mainMenu.printOptions();*/
+    mainMenu.printOptions();
+
+  parser *syntax;
+  syntax = new parser;
+
+  string cmdLine;
+
+  cout << "Enter a string: " << endl;
+
+  getline(cin, cmdLine);
+
+  syntax->parsing(cmdLine);
+  syntax->displayToken();
     return EXIT_SUCCESS;
 }
