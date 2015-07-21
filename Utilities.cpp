@@ -20,7 +20,7 @@
 
 #include "Utilities.h"
 #include "Converter.h"
-//#include "encryption.h"
+#include "encryption.h"
 
 using namespace std;
 
@@ -76,14 +76,11 @@ namespace Utilities {
 			switch(runUtil){
 				case CONVERTER_UTILITY:
 
-					cout << "converter" << endl;
-
 					util = new Converter();
 
 					break;
 				case ENCRYPTION_UTILITY:
 
-					cout << "encryption" << endl;
 					break;
 				case MOTD_UTILITY:
 
@@ -91,15 +88,14 @@ namespace Utilities {
 					break;
 				case PALINDROME_UTILITY:
 
-					cout << "palindrome" << endl;
+
 					break;
 				case CALCULATOR_UTILITY:
 
-					cout << "calc" << endl;
+
 					break;
 				case DATE_TIME_UTILITY:
 
-					cout << "date time" << endl;
 					break;
 
 				case EXIT:
