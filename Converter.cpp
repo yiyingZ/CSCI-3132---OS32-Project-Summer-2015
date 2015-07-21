@@ -99,22 +99,6 @@ namespace Utilities {
 		return true;
 	}
 
-	void Converter::convertFtoC() {
-	}
 
-	void Converter::convertCtoF() {
-	}
-
-	void Converter::convertFeetToMeters() {
-	}
-
-	void Converter::convertMetersToFeet() {
-	}
-
-	void Converter::convertLbsToKgs() {
-	}
-
-	void Converter::convertKgsToLbs() {
-	}
 
 } /* namespace Utilities */

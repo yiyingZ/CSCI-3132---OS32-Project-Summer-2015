@@ -40,12 +40,6 @@ namespace Utilities {
 			void displayMenu();
 			bool checkUserInput();
 
-			void convertFtoC();
-			void convertCtoF();
-			void convertFeetToMeters();
-			void convertMetersToFeet();
-			void convertLbsToKgs();
-			void convertKgsToLbs();
 	};
 
 } /* namespace Utilities */
