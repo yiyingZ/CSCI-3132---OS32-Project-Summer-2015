@@ -52,7 +52,7 @@ namespace Utilities {
 
 		Utilities* util = NULL;
 
-		cout << "::Utilities Menu::" << endl;
+		cout << "\n\n::Utilities Menu::" << endl;
 		cout << "1. Converter Utility" << endl;
 		cout << "2. Encryption Utility" << endl;
 		cout << "3. Message of the day Utility" << endl;
