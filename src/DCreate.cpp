@@ -9,7 +9,7 @@
 using namespace std;
 
 /**
-* Fcreate class that creates a new file when the command is executed
+* Dcreate class that creates a new directory when the command is executed
 */
 class DCreate : public Command {
 private: 
