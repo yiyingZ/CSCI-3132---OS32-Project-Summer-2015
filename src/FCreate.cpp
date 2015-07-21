@@ -14,7 +14,7 @@ using namespace std;
 */
 class FCreate : public Command {
 private:
-  char* filename;
+  	char* filename;
 public:
 	/* Fcreate constructor
 	* @function name: FCreate
