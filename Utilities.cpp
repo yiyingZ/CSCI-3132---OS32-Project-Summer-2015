@@ -123,7 +123,10 @@ namespace Utilities {
 
 		 while(util != NULL){
 			 util = displayMenu();
-			 util->execute();
+
+			 if(util != NULL){
+				 util->execute();
+			 }
 		 }
 
 		 //This will be replaced with reference to the Kernel and the pointer "util" passed for scheduling and execution
