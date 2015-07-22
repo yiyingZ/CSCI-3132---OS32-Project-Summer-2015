@@ -57,7 +57,7 @@ public:
                     notlog = false;
                     cout << message << "\n";
                     loggedin = true;
-                    break;
+                    return username;
                 }
             }
 

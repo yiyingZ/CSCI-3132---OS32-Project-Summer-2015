@@ -5,6 +5,7 @@
 #include <iterator>
 #include <sstream>
 #include <algorithm>
+#include "Login.cpp"
 #include "UI.h"
 
 void UI::println(const std::string &msg) {
@@ -17,9 +18,15 @@ void UI::print(const std::string &msg) {
 
 void UI::startUI() {
     // Authenticate User:
+    Login l;
+    std::string username = l.login();
 
     // Start prompt
+    std::string prompt = username + "@OS32-Menu> ";
+
     UI::println("Your main menu options");
+    UI::print(prompt);
+
     int option = 0;
     while( option = UI::read<int>()) {
         if(option == 1) { // Parse user command
@@ -30,7 +37,7 @@ void UI::startUI() {
             }
         }
         else if(option == 2) { // Start utilties
-
+            new Utilities();
         }
         else if(option == 3) { // Shutdown
             break;
@@ -38,6 +45,9 @@ void UI::startUI() {
         else {
             UI::println("Invalid option.");
         }
+
+        UI::println("Your main menu options");
+        UI::print(prompt);
     }
 }
 
