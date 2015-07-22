@@ -16,6 +16,12 @@ void UI::print(const std::string &msg) {
     std::cout << msg;
 }
 
+void printMainMenu(std::string prompt) {
+    UI::println("Your main menu options (enter the number to choose an option)");
+    UI::println("(1) User Commands \t\t (2) Utilities \t\t (3) Shutdown OS32");
+    UI::print(prompt);
+}
+
 void UI::startUI() {
     // Authenticate User:
     Login l;
@@ -23,10 +29,7 @@ void UI::startUI() {
 
     // Start prompt
     std::string prompt = username + "@OS32-Menu> ";
-
-    UI::println("Your main menu options");
-    UI::print(prompt);
-
+    printMainMenu(prompt);
     int option = 0;
     while( option = UI::read<int>()) {
         if(option == 1) { // Parse user command
@@ -37,7 +40,6 @@ void UI::startUI() {
             }
         }
         else if(option == 2) { // Start utilties
-            new Utilities();
         }
         else if(option == 3) { // Shutdown
             break;
@@ -45,9 +47,7 @@ void UI::startUI() {
         else {
             UI::println("Invalid option.");
         }
-
-        UI::println("Your main menu options");
-        UI::print(prompt);
+        printMainMenu(prompt);
     }
 }
 

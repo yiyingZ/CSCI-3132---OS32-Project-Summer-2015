@@ -6,7 +6,8 @@
 using namespace std;
 
 int main() {
-    test_static_io();
+    //test_static_io();
+    test_user_interface();
 
     return 0;
 }

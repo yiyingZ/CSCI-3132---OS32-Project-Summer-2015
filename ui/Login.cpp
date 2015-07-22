@@ -1,11 +1,16 @@
 #include <iostream>
 #include <string>
-#include <conio.h>
 #include <fstream>
+#include <termios.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include "UI.h"
+
+
 using namespace std;
 
-class Login
-{
+class Login {
     string username = "";
     string password = "";
     string ucheck;
@@ -17,25 +22,45 @@ class Login
     string message = "Message of the day: If you're reading this, you've been in a coma for almost 20 years now, we're trying a new technique. We don't know where this message will end up in your dream, but we hope we're getting through. Please wake up! We miss you.";
     ifstream userAccounts;
 
+    /*
+     * conio getch replacement found online:
+     * http://cboard.cprogramming.com/faq-board/27714-faq-there-getch-conio-equivalent-linux-unix.html
+     */
+    int mygetch() {
+        struct termios oldt,
+                newt;
+        int ch;
+        tcgetattr(STDIN_FILENO, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+        ch = getchar();
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        return ch;
+    }
+
 public:
 
-    void login(){
+    std::string login() {
 
-        while(notlog){
+        while (notlog) {
             cout << c_line;
             cout << "Enter username: ";
             cin >> username;
 
+            cin.ignore(1);
+            cin.clear();
+
             cout << c_line;
             cout << "Enter password: ";
-            ch = _getch();
-            while(ch != 13){//character 13 is enter
+            ch = mygetch();
+            while (ch != 10) {//character 13 is enter
                 password.push_back(ch);
                 cout << '*';
-                ch = _getch();
-                while(ch == '\b'){
+                ch = mygetch();
+                while (ch == '\b') {
                     cout << "\b \b";
-                    ch = _getch();
+                    ch = mygetch();
                     password.pop_back();
                 }
             }
@@ -44,13 +69,16 @@ public:
 
             //
 
-            userAccounts.open("OS32/systems/account/user-accounts.txt");
+            userAccounts.open("user-accounts.txt");
+            if(!userAccounts.is_open()) {
+                UI::println("FATAL ERROR: user-accounts.txt not found.");
+            }
 
-            while(std::getline(userAccounts, ucheck)){
+            while (std::getline(userAccounts, ucheck)) {
 
                 std::getline(userAccounts, pcheck);
 
-                if((username.compare(ucheck) == 0) && password.compare(pcheck) == 0){
+                if ((username.compare(ucheck) == 0) && password.compare(pcheck) == 0) {
                     c_line = username + "@OS32> ";
                     cout << c_line;
                     cout << "Login successful! Welcome, " << username << ".\n";
@@ -61,7 +89,7 @@ public:
                 }
             }
 
-            if(!loggedin){
+            if (!loggedin) {
                 cout << "Invalid username or password";
                 password = "";
             }
