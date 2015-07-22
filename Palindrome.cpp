@@ -3,6 +3,7 @@
 //
 
 #include "Palindrome.h"
+#include "UI.h"
 #include <string>
 #include <sstream>
 
@@ -20,10 +21,10 @@ void Palindrome::execute() {
  */
 void Palindrome::palindrome() {
     string input;
-    cout << "Input a string: ";
-    cin >> input;
+    UI::print("Input a string: ");
+    input = UI::readLine();
     if (input == string(input.rbegin(), input.rend())) {
-        cout << input << " is a palindrome" << endl;
+        UI::println(input+" is a palindrome");
     }
-    else cout << input << "is not palindrome" << endl;
+    else UI::println(input+"is not palindrome");
 }
