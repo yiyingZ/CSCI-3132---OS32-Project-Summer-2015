@@ -3,6 +3,8 @@
 //
 
 #include "Motd.h"
+#include "UI.h"
+#include "vector.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>
@@ -18,7 +20,11 @@ void Motd::execute() {
 void generateMOTD(){
     //Get the file containing the messages
     FileSystem& fs = FileSystem::getInstance();
-    File* motd = fs.fLocate("Motd.txt");
+    File* motd;
+    if((motd=fs.fLocate("motd.tmp"))!= nullptr){
+        UI::println(motd->getContents());
+    }
+    motd = fs.fLocate("Motd.txt");
     //Retrieve its contents line by line
     string messages = motd->getContents();
     istringstream stream(messages);
@@ -30,5 +36,6 @@ void generateMOTD(){
     while (i!=mindex && getline(stream, line)){
         i++;
     }
-    cout << line << endl;
+    fs.fcreate("motd.tmp",line,std::vector<bool>(true,true,true));
+    UI::println(line);
 }
