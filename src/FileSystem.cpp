@@ -60,8 +60,7 @@ File *FileSystem::fwrite(std::string fName) {
 }
 /*
  * function: dcreate
- * needs to check that File has fileType 1 before it does anything
- * and if so build a new file (with fileType 1) and add it to currDir's
+ * build a new file (with fileType 1) and add it to currDir's
  * vector of File pointers
  */
 bool FileSystem::dcreate(std::string dName) {
@@ -75,7 +74,8 @@ bool FileSystem::dcreate(std::string dName) {
 }
 
 /*
- * function: currdir
+ * function: getCurrDir
+ * simple self explanatory function
  *
  */
 File *FileSystem::getCurrDir() {
@@ -92,7 +92,7 @@ bool FileSystem::fdelete(std::string n) {
         return 0;
 }
 /*
- * function: renameFile
+ * function: renameFile (self explanatory)
  */
 bool FileSystem::renameFile(std::string n, std::string newN) {
     fLocate(n)->setFileName(newN);
@@ -125,7 +125,7 @@ std::string FileSystem::listitems() {
 bool FileSystem::chper(std::string fn,std::vector<bool> p) {
     File *f = fLocate(fn);
     f->setPermissions(p);
-
+    return 1;
 
 }
 

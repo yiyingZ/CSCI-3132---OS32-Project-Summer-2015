@@ -14,6 +14,7 @@ private:
     void operator=(FileSystem const&) = delete;
     //some root directory that nests all other dirs and files
     File* rootDir;
+    //current directory (navigation)
     File* currDir;
 public:
     //implements the class as a singleton pattern
@@ -33,24 +34,22 @@ public:
     File* fLocate(std::string fn);
     //fread returns pointer to fName if it exists
     //so that display can display its contents,
-    //or it can be modified
     //error message o.w.
     File* fread(std::string fName);
     //fwrite returns pointer to fName if it exists
     //so that display can display existing contents
-    //make changes, and call fcreate to overwrite existing
-    //file
+    //and user changes can be made (and committed using File functions
     File* fwrite(std::string fName);
-    //create new dir of given dName & returns it, return error if exists
+    //create new dir of given dName & returns it, return error o.w.
     bool dcreate(std::string dName);
-    //search for file from root using dfs, delete File with filename n if it
+    //search for file from root & delete File with filename n if it
     //exists (return 1 if successful), return 0 o.w.
     bool fdelete(std::string n);
-    //search for file from root using dfs, rename file n to newN and return
-    //a 1 if successfull, 0 o.w.
+    //search for file from root, rename file n to newN and return
+    //a 1 if successful, 0 o.w.
     bool renameFile(std::string n,std::string newN);
-    //change fn permissions to p (rwx =777) if file is found (start dfs at
-    //rootDir) and return 1, if file not found return 0
+    //change fn permissions to p (rwx =777) if file is found,
+    // return 1, if file not found return 0
     bool chper(std::string fn,std::vector<bool> p);
 
 };

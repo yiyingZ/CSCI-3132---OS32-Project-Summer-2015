@@ -11,8 +11,7 @@ using namespace std;
 /*
  * Constructor for file that is regular type
  * takes in fileName, assigns fileType=0, sets dir as nullptr,
- * sets contents to whatever
- * string is sent in as c, and populates permissions by
+ * sets contents to c, and permissions to p
  */
 File::File(std::string fn,std::string c,std::vector<bool> p){
     fileName=fn; fileType=0;contents=c;permissions=p;
@@ -126,6 +125,10 @@ void File::setContents(const std::string &c) {
 }
 
 
+/*
+ * function: getPermissions
+ * simple function that returns vector of bools (the file's permissions)
+ */
 std::vector<bool> File::getPermissions() {
     return permissions;
 }
