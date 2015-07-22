@@ -85,13 +85,14 @@ int main() {
     assert(fs.fLocate("blah"));
     cout<<1<<endl;
     cout<<"Test FileSystem Class fread: ";
-    assert(fs.fread("blah"));
+    assert("blah blah" == fs.fread("blah")->getContents());
     cout<<1<<endl;
     cout<<"Test FileSystem Class fwrite: ";
     assert(fs.fwrite("blah"));
     cout<<1<<endl;
     cout<<"Test FileSystem Class dcreate: ";
-    assert(1==fs.dcreate("blahDir"));
+    int i = fs.dcreate("blahDir");
+    assert(fs.fLocate("blahDir")->getFileName()=="blahDir");
     cout<<1<<endl;
     cout<<"Test FileSystem Class renameFile: ";
     assert(1==fs.renameFile("blah","blah2"));
@@ -102,6 +103,7 @@ int main() {
     cout<<1<<endl;
     cout<<"Test FileSystem Class fdelete: ";
     assert(1==fs.fdelete("blah2"));
+
     cout<<1<<endl;
 
     return 0;
