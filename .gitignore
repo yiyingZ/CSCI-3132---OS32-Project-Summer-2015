@@ -1,3 +1,11 @@
+CMakeFiles
+*.cmake
+Makefile
+*automoc.cpp
+CMakeCache.txt
+*.cbp
+*.user
+
 # Compiled Object files
 *.slo
 *.lo
