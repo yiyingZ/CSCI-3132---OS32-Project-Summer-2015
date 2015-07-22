@@ -1,4 +1,11 @@
 /*
+ * test.cpp
+ *
+ *  Created on: Jul 21, 2015
+ *      Author: ArnoldBocor
+ */
+
+/*
  * ListItems.cpp
  *
  * This class is use to print the list the of files and directories in the path provided
@@ -13,8 +20,6 @@
  *
  * The solution designed for this command works with both Windows and Linux file structure.
  *
- * A cross platform solution can be implemented but will be heavily dependent on Third party libraries.
- *
  *  Created on: Jul 17, 2015
  *      Author: Arnold Zoundi - B00584876
  */
@@ -22,22 +27,17 @@
 #include<iostream>
 #include<string>
 #include<sstream>
-#include"Command.h"
+#include "Command.h"
 #include "dirent.h"
 
 using namespace std;
 
-class ListItems : public Command{
-
-private:
-	char* pathname;
+class ListItems:public Command{
 
 public:
 
-	ListItems(string pathname){
-
-		this->pathname = new char[pathname.length() + 1];
-		strcpy(this->pathname, pathname.c_str()); //use strcpy_s when compiling with visual studio. No change if using eclipse
+	//constructor
+	ListItems(){
 
 	}
 
@@ -50,7 +50,7 @@ public:
 		string oneDot=".";
 		string twoDot="..";
 		struct dirent *ent;
-		if((dir = opendir(this->pathname))){
+		if((dir = opendir(".")) != NULL){
 
 			while((ent = readdir(dir)) != NULL){
 
@@ -62,12 +62,13 @@ public:
 
 			return 1;
 
-		}else{
-			cout<<"Could not find Directory\n";
-			return 0;
 		}
 
+
+		 return 0;
+
 	}
+
 
 };
 
@@ -77,15 +78,7 @@ public:
  */
 //int main(int argc, const char * argv[]){
 //
-//	Command* command = new ListItems(argv[1]);
-//
-//	//make sure path name was provided
-//	if(argc != 2){
-//
-//		cout<<"Usage: program_name path_name\n";
-//		return 0;
-//
-//	}
+//	Command* command = new ListItems();
 //
 //	//call execute to display list of files
 //	if(command->execute()){
@@ -97,6 +90,10 @@ public:
 //
 //	return 0;
 //}
+
+
+
+
 
 
 
